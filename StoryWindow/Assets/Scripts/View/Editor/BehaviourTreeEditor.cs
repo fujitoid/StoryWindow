@@ -21,20 +21,22 @@ public class BehaviourTreeEditor : EditorWindow
         VisualElement root = rootVisualElement;
         
         var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Scripts/View/Editor/BehaviourTreeEditor.uxml");
-        visualTree.CloneTree();
+        visualTree.CloneTree(root);
         
         var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/View/Editor/BehaviourTreeEditor.uss");
         root.styleSheets.Add(styleSheet);
 
         _behaviourTreeView = root.Q<BehaviourTreeView>();
+        
+        OnSelectionChange();
     }
 
     private void OnSelectionChange()
     {
         BehaviourTree tree = Selection.activeObject as BehaviourTree;
-        if (tree)
+        if (tree && AssetDatabase.CanOpenAssetInEditor(tree.GetInstanceID()))
         {
-            
+            _behaviourTreeView.PopulateView(tree);
         }
     }
 }

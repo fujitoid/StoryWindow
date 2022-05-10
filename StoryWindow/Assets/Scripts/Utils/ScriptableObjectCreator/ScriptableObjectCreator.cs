@@ -11,12 +11,6 @@ public class ScriptableObjectCreator : Editor
     {
         var selection = Selection.objects.FirstOrDefault();
 
-        if (selection == default)
-            return;
-
-        if (selection is MonoScript == false || (selection as MonoScript).GetClass() is ScriptableObject == false)
-            return;
-
         var selectionPath = AssetDatabase.GetAssetPath(selection);
 
         var directory = Path.GetDirectoryName(selectionPath);
