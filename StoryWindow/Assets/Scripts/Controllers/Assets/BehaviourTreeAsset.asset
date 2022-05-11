@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a404fcaba27a78488178e186a7d94f5, type: 3}
-  m_Name: BehaviourTree
+  m_Script: {fileID: 11500000, guid: ea5cd9babf1043c45acf28548a2fdb6f, type: 3}
+  m_Name: BehaviourTreeAsset
   m_EditorClassIdentifier: 
-  _nodes: []
+  _directory: 

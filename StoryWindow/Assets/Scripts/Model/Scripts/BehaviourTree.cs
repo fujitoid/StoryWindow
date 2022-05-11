@@ -1,40 +1,31 @@
+using System;
 using System.Collections.Generic;
+using Unity.Plastic.Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
-public class BehaviourTree : ScriptableObject
+[Serializable]
+public class BehaviourTree
 {
-    protected BaseNode _rooNode;
-    protected NodeStateType _treeState = NodeStateType.Running;
-    [SerializeField] protected List<BaseNode> _nodes = new List<BaseNode>();
+    [JsonProperty] protected NodeStateType _treeState = NodeStateType.Running;
+    [JsonProperty] protected List<BaseNode> _nodes = new List<BaseNode>();
 
-    public NodeStateType TreeState => _treeState;
-    public IReadOnlyList<BaseNode> Nodes => _nodes;
+    [JsonIgnore] public NodeStateType TreeState => _treeState;
+    [JsonIgnore] public IReadOnlyList<BaseNode> Nodes => _nodes;
 
-    public void Construct(BaseNode rootNode)
+    [JsonConstructor]
+    public BehaviourTree()
     {
-        _rooNode = rootNode;
-    }
-
-    public NodeStateType Update()
-    {
-        if (_rooNode.State == NodeStateType.Running)
-        {
-            _treeState = _rooNode.Update();
-        }
-
-        return _treeState;
+        _treeState = NodeStateType.Running;
+        _nodes = new List<BaseNode>();
     }
 
     public BaseNode CreateNode(System.Type type)
     {
-        BaseNode node = ScriptableObject.CreateInstance(type) as BaseNode;
-        node.name = type.Name;
-        node.Construct(GUID.Generate().ToString());
+        BaseNode node = Activator.CreateInstance(type) as BaseNode;
+        node.Name = type.Name;
+        node.Guid = GUID.Generate().ToString();
         _nodes.Add(node);
-
-        AssetDatabase.AddObjectToAsset(node, this);
-        AssetDatabase.SaveAssets();
 
         return node;
     }
@@ -42,44 +33,20 @@ public class BehaviourTree : ScriptableObject
     public void DeleteNode(BaseNode node)
     {
         _nodes.Remove(node);
-        AssetDatabase.RemoveObjectFromAsset(node);
-        AssetDatabase.SaveAssets();
     }
 
     public void AddChild(BaseNode parent, BaseNode child)
     {
-        DecoratorNodeBase decorator = parent as DecoratorNodeBase;
-        if(decorator != null)
-            decorator.SetChild(child);
-        
-        CompositeNodeBase composite = parent as CompositeNodeBase;
-        if(composite != null)
-            composite.SetNodes(parent);
+        parent.Children.Add(child);
     }
 
     public void RemoveChild(BaseNode parent, BaseNode child)
     {
-        DecoratorNodeBase decorator = parent as DecoratorNodeBase;
-        if(decorator != null)
-            decorator.SetChild(null);
-        
-        CompositeNodeBase composite = parent as CompositeNodeBase;
-        if(composite != null)
-            composite.RemoveNodes(parent);
+        parent.Children.Remove(child);
     }
 
     public List<BaseNode> GetChildren(BaseNode parent)
     {
-        var children = new List<BaseNode>();
-        
-        DecoratorNodeBase decorator = parent as DecoratorNodeBase;
-        if(decorator != null)
-            children.Add(decorator.Child);
-        
-        CompositeNodeBase composite = parent as CompositeNodeBase;
-        if(composite != null)
-            children.AddRange(composite.Nodes);
-
-        return children;
+        return parent.Children;
     }
 }

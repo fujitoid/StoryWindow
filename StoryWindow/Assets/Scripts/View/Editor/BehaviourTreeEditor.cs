@@ -1,18 +1,18 @@
-using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEditor.UIElements;
 
 
 public class BehaviourTreeEditor : EditorWindow
 {
-    private BehaviourTreeView _behaviourTreeView;
+    private static BehaviourTreeView _behaviourTreeView;
     
-    [MenuItem("SituationCreator/StoryWindow")]
-    public static void OpenWindow()
+    public static void OpenWindow(BehaviourTree behaviourTree)
     {
         BehaviourTreeEditor wnd = GetWindow<BehaviourTreeEditor>();
+        
+        _behaviourTreeView.PopulateView(behaviourTree);
+        
         wnd.titleContent = new GUIContent("BehaviourTreeEditor");
     }
 
@@ -27,16 +27,5 @@ public class BehaviourTreeEditor : EditorWindow
         root.styleSheets.Add(styleSheet);
 
         _behaviourTreeView = root.Q<BehaviourTreeView>();
-        
-        OnSelectionChange();
-    }
-
-    private void OnSelectionChange()
-    {
-        BehaviourTree tree = Selection.activeObject as BehaviourTree;
-        if (tree && AssetDatabase.CanOpenAssetInEditor(tree.GetInstanceID()))
-        {
-            _behaviourTreeView.PopulateView(tree);
-        }
     }
 }

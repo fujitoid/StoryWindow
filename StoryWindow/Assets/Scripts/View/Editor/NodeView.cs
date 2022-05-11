@@ -1,7 +1,6 @@
 using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class NodeView : Node
 {
@@ -20,20 +19,20 @@ public class NodeView : Node
     public NodeView(BaseNode node)
     {
         this._node = node;
-        this.title = node.name;
+        this.title = node.Name;
 
-        this.viewDataKey = node.GUID;
+        this.viewDataKey = node.Guid;
 
         style.left = node.Position.x;
         style.top = node.Position.y;
 
         CreateInputPorts();
-        CreateOutpotPorts();
+        CreateOutputPorts();
     }
 
     private void CreateInputPorts()
     {
-        if (Node is BaseNode)
+        if (Node is SplitNode)
             _inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));
 
         if (_inputPort != null)
@@ -43,10 +42,10 @@ public class NodeView : Node
         }
     }
 
-    private void CreateOutpotPorts()
+    private void CreateOutputPorts()
     {
         if (Node is BaseNode)
-            _outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(bool));
+            _outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
 
         if (_outputPort != null)
         {

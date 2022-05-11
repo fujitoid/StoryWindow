@@ -44,8 +44,8 @@ public class BehaviourTreeView : GraphView
             var children = tree.GetChildren(treeNode);
             children.ForEach(x =>
             {
-                NodeView parentView = GetNodeByGuid(treeNode.GUID) as NodeView;
-                NodeView childView = GetNodeByGuid(x.GUID) as NodeView;
+                NodeView parentView = GetNodeByGuid(treeNode.Guid) as NodeView;
+                NodeView childView = GetNodeByGuid(x.Guid) as NodeView;
 
                 Edge edge = parentView.OutputPort.ConnectTo(childView.InputPort);
                 AddElement(edge);

@@ -6,9 +6,6 @@ using UnityEngine;
 public class BehaviourTreeRunner : MonoBehaviour
 {
     [SerializeField] private BehaviourTree _behaviourTree;
-
-    private void Update()
-    {
-        _behaviourTree.Update();
-    }
+    
+    
 }
