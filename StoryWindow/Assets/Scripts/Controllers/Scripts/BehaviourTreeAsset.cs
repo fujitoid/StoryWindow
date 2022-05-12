@@ -6,12 +6,11 @@ using UnityEditor;
 using UnityEngine;
 using Application = UnityEngine.Application;
 
-public class BehaviourTreeAsset : ScriptableObject
+public class BehaviourTreeAsset : ScriptableObject, IBehaviourTreeSaver
 {
-    [SerializeField] internal bool IsLoaded = false;
     [SerializeField] private string _directory;
-    
-    private BehaviourTree _behaviourTree;
+
+    private BehaviourTree _behaviourTree = null;
 
     public BehaviourTree BehaviourTree => _behaviourTree;
 
@@ -42,8 +41,8 @@ public class BehaviourTreeAsset : ScriptableObject
             BinaryReader binaryReader = new BinaryReader(File.OpenRead(_directory));
             var json = binaryReader.ReadString();
             var loadedTree = JsonConvert.DeserializeObject<BehaviourTree>(json);
-            
-            if(loadedTree == null)
+
+            if (loadedTree == null)
                 return;
 
             _behaviourTree = loadedTree;
@@ -59,9 +58,13 @@ public class BehaviourTreeAsset : ScriptableObject
         {
             BinaryReader binaryReader = new BinaryReader(File.OpenRead(openDialog.FileName));
             var json = binaryReader.ReadString();
-            var loadedTree = JsonConvert.DeserializeObject<BehaviourTree>(json);
-            
-            if(loadedTree == null)
+            var loadedTree = JsonConvert.DeserializeObject<BehaviourTree>(json, new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                NullValueHandling = NullValueHandling.Ignore
+            });
+
+            if (loadedTree == null)
                 return;
 
             _behaviourTree = loadedTree;
@@ -71,22 +74,28 @@ public class BehaviourTreeAsset : ScriptableObject
 
     public void SaveTree()
     {
-        if(_behaviourTree == null)
+        if (_behaviourTree == null)
             return;
-        
-        if(_directory == string.Empty)
+
+        if (_directory == string.Empty)
             return;
-        
-        var json = JsonConvert.SerializeObject(_behaviourTree);
+
+        var json = JsonConvert.SerializeObject(_behaviourTree, Formatting.None, new JsonSerializerSettings()
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            TypeNameHandling = TypeNameHandling.Auto
+        });
         BinaryWriter binaryWriter = new BinaryWriter(File.Create(_directory));
         binaryWriter.Write(json);
     }
 
     public void OpenStoryWindow()
     {
-        if(_behaviourTree == null)
+        if (_behaviourTree == null)
             return;
-        
-        BehaviourTreeEditor.OpenWindow(_behaviourTree);
+
+        BehaviourTreeEditor.OpenWindow(_behaviourTree, this);
     }
+
+    public void Save() => SaveTree();
 }

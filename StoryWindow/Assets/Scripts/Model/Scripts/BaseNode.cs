@@ -16,21 +16,14 @@ public abstract class BaseNode
     [JsonProperty] protected bool _isStarted = false;
     [JsonProperty] protected Vector2 _position;
 
-    [JsonProperty] protected List<IExecutable> _executables = new List<IExecutable>();
-    
     [JsonIgnore] private int _currentActionIndex = 0;
+    
+    [JsonIgnore] protected List<IExecutable> _executables = new List<IExecutable>();
 
+    [JsonIgnore] public string GUID => Guid;
     [JsonIgnore] public NodeStateType State => _state;
     [JsonIgnore] public bool IsStarted => _isStarted;
     [JsonIgnore] public Vector2 Position => _position;
-
-    [JsonConstructor]
-    public BaseNode()
-    {
-        Children = new List<BaseNode>();
-        _position = new Vector2();
-        _executables = new List<IExecutable>();
-    }
 
     internal virtual void SetPosition(Vector2 position)
     {

@@ -6,13 +6,14 @@ using UnityEngine.UIElements;
 public class BehaviourTreeEditor : EditorWindow
 {
     private static BehaviourTreeView _behaviourTreeView;
+    private static IBehaviourTreeSaver _treeSaver;
     
-    public static void OpenWindow(BehaviourTree behaviourTree)
+    public static void OpenWindow(BehaviourTree behaviourTree, IBehaviourTreeSaver treeSaver)
     {
+        _treeSaver = treeSaver;
         BehaviourTreeEditor wnd = GetWindow<BehaviourTreeEditor>();
-        
+
         _behaviourTreeView.PopulateView(behaviourTree);
-        
         wnd.titleContent = new GUIContent("BehaviourTreeEditor");
     }
 
@@ -27,5 +28,12 @@ public class BehaviourTreeEditor : EditorWindow
         root.styleSheets.Add(styleSheet);
 
         _behaviourTreeView = root.Q<BehaviourTreeView>();
+
+        var saveButton = root.Q<Button>("save-button");
+
+        if (_treeSaver == null)
+            return;
+
+        saveButton.clicked += _treeSaver.Save;
     }
 }

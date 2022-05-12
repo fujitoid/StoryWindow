@@ -6,7 +6,15 @@ using UnityEngine;
 [Serializable]
 public sealed class EventNode : BaseNode
 {
-    [JsonProperty][SerializeField] private EventType _event;
+    [JsonProperty] private int _event;
     
-    [JsonIgnore] public EventType Event => _event;
+    [JsonIgnore] public EventType Event => (EventType)_event;
+
+    [JsonConstructor]
+    public EventNode()
+    {
+        Children = new List<BaseNode>();
+        _executables = new List<IExecutable>();
+        _position = new Vector2();
+    }
 }

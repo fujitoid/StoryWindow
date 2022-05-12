@@ -12,8 +12,6 @@ public class BehaviourTreeAssetEditor : Editor
 
         BehaviourTreeAsset asset = (BehaviourTreeAsset) target;
 
-        asset.IsLoaded = asset.BehaviourTree != null;
-
         if (GUILayout.Button("Create Tree"))
         {
             asset.CreateTree();
@@ -26,13 +24,19 @@ public class BehaviourTreeAssetEditor : Editor
             asset.LoadTree();
         }
 
+        GUI.enabled = asset.BehaviourTree != null;
+
         if (GUILayout.Button("Save Tree"))
         {
             asset.SaveTree();
         }
+
+        GUI.enabled = true;
         
         GUILayout.EndHorizontal();
 
+        GUI.enabled = asset.BehaviourTree != null;
+        
         if (GUILayout.Button("Open Story Window"))
         {
             asset.OpenStoryWindow();
