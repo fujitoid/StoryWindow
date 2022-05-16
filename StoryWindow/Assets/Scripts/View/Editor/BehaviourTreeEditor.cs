@@ -1,39 +1,44 @@
+using Nekonata.SituationCreator.StoryWindow.Controllers.TreeAsset.Context;
+using Nekonata.SituationCreator.StoryWindow.Model;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 
-public class BehaviourTreeEditor : EditorWindow
+namespace Nekonata.SituationCreator.StoryWindow.View.Editor
 {
-    private static BehaviourTreeView _behaviourTreeView;
-    private static IBehaviourTreeSaver _treeSaver;
-    
-    public static void OpenWindow(BehaviourTree behaviourTree, IBehaviourTreeSaver treeSaver)
+    public class BehaviourTreeEditor : EditorWindow
     {
-        _treeSaver = treeSaver;
-        BehaviourTreeEditor wnd = GetWindow<BehaviourTreeEditor>();
+        private static BehaviourTreeView _behaviourTreeView;
+        private static IBehaviourTreeSaver _treeSaver;
 
-        _behaviourTreeView.PopulateView(behaviourTree);
-        wnd.titleContent = new GUIContent("BehaviourTreeEditor");
-    }
+        public static void OpenWindow(BehaviourTree behaviourTree, IBehaviourTreeSaver treeSaver)
+        {
+            _treeSaver = treeSaver;
+            BehaviourTreeEditor wnd = GetWindow<BehaviourTreeEditor>();
 
-    public void CreateGUI()
-    {
-        VisualElement root = rootVisualElement;
-        
-        var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Scripts/View/Editor/BehaviourTreeEditor.uxml");
-        visualTree.CloneTree(root);
-        
-        var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/View/Editor/BehaviourTreeEditor.uss");
-        root.styleSheets.Add(styleSheet);
+            _behaviourTreeView.PopulateView(behaviourTree);
+            wnd.titleContent = new GUIContent("BehaviourTreeEditor");
+        }
 
-        _behaviourTreeView = root.Q<BehaviourTreeView>();
+        public void CreateGUI()
+        {
+            VisualElement root = rootVisualElement;
 
-        var saveButton = root.Q<Button>("save-button");
+            var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Scripts/View/Editor/BehaviourTreeEditor.uxml");
+            visualTree.CloneTree(root);
 
-        if (_treeSaver == null)
-            return;
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/View/Editor/BehaviourTreeEditor.uss");
+            root.styleSheets.Add(styleSheet);
 
-        saveButton.clicked += _treeSaver.Save;
-    }
+            _behaviourTreeView = root.Q<BehaviourTreeView>();
+
+            var saveButton = root.Q<Button>("save-button");
+
+            if (_treeSaver == null)
+                return;
+
+            saveButton.clicked += _treeSaver.Save;
+        }
+    } 
 }

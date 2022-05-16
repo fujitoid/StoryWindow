@@ -4,26 +4,29 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-public class ScriptableObjectCreator : Editor
+namespace Nekonata.SituationCreator.Utils.ScriptableObjectCreator
 {
-    [MenuItem("Assets/Create/MyTools/Create this ScriptableObject")]
-    public static void CreateThisScriptableObject()
+    public class ScriptableObjectCreator : Editor
     {
-        var selection = Selection.objects.FirstOrDefault();
+        [MenuItem("Assets/Create/MyTools/Create this ScriptableObject")]
+        public static void CreateThisScriptableObject()
+        {
+            var selection = Selection.objects.FirstOrDefault();
 
-        var selectionPath = AssetDatabase.GetAssetPath(selection);
+            var selectionPath = AssetDatabase.GetAssetPath(selection);
 
-        var directory = Path.GetDirectoryName(selectionPath);
-        var fileName = Path.GetFileNameWithoutExtension(selectionPath);
-        var newFilePath = Path.Combine(directory, $"New{fileName}.asset");
+            var directory = Path.GetDirectoryName(selectionPath);
+            var fileName = Path.GetFileNameWithoutExtension(selectionPath);
+            var newFilePath = Path.Combine(directory, $"New{fileName}.asset");
 
-        var assetPath = AssetDatabase.GenerateUniqueAssetPath(newFilePath);
-        var so = ScriptableObject.CreateInstance((selection as MonoScript).GetClass());
+            var assetPath = AssetDatabase.GenerateUniqueAssetPath(newFilePath);
+            var so = CreateInstance((selection as MonoScript).GetClass());
 
-        AssetDatabase.CreateAsset(so, assetPath);
+            AssetDatabase.CreateAsset(so, assetPath);
 
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
     }
 }
 #endif

@@ -1,4 +1,7 @@
-public interface IBehaviourTreeSaver
+namespace Nekonata.SituationCreator.StoryWindow.Controllers.TreeAsset.Context
 {
-    public void Save();
+    public interface IBehaviourTreeSaver
+    {
+        public void Save();
+    } 
 }

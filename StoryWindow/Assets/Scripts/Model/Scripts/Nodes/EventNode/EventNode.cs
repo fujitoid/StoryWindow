@@ -1,20 +1,24 @@
+using Nekonata.SituationCreator.StoryWindow.Model.Context;
 using System;
 using System.Collections.Generic;
 using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 
-[Serializable]
-public sealed class EventNode : BaseNode
+namespace Nekonata.SituationCreator.StoryWindow.Model.Implementations
 {
-    [JsonProperty] private int _event;
-    
-    [JsonIgnore] public EventType Event => (EventType)_event;
-
-    [JsonConstructor]
-    public EventNode()
+    [Serializable]
+    public sealed class EventNode : BaseNode
     {
-        Children = new List<BaseNode>();
-        _executables = new List<IExecutable>();
-        _position = new Vector2();
-    }
+        [JsonProperty] private int _event;
+
+        [JsonIgnore] public EventType Event => (EventType)_event;
+
+        [JsonConstructor]
+        public EventNode()
+        {
+            Children = new List<BaseNode>();
+            _executables = new List<IExecutable>();
+            _position = new Vector2();
+        }
+    } 
 }

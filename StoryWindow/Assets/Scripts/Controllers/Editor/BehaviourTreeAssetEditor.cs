@@ -3,43 +3,46 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(BehaviourTreeAsset))]
-public class BehaviourTreeAssetEditor : Editor
+namespace Nekonata.SituationCreator.StoryWindow.Controllers.TreeAsset.Editor
 {
-    public override void OnInspectorGUI()
+    [CustomEditor(typeof(BehaviourTreeAsset))]
+    public class BehaviourTreeAssetEditor : UnityEditor.Editor
     {
-        base.OnInspectorGUI();
-
-        BehaviourTreeAsset asset = (BehaviourTreeAsset) target;
-
-        if (GUILayout.Button("Create Tree"))
+        public override void OnInspectorGUI()
         {
-            asset.CreateTree();
+            base.OnInspectorGUI();
+
+            BehaviourTreeAsset asset = (BehaviourTreeAsset)target;
+
+            if (GUILayout.Button("Create Tree"))
+            {
+                asset.CreateTree();
+            }
+
+            GUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("Load tree"))
+            {
+                asset.LoadTree();
+            }
+
+            GUI.enabled = asset.BehaviourTree != null;
+
+            if (GUILayout.Button("Save Tree"))
+            {
+                asset.SaveTree();
+            }
+
+            GUI.enabled = true;
+
+            GUILayout.EndHorizontal();
+
+            GUI.enabled = asset.BehaviourTree != null;
+
+            if (GUILayout.Button("Open Story Window"))
+            {
+                asset.OpenStoryWindow();
+            }
         }
-
-        GUILayout.BeginHorizontal();
-        
-        if (GUILayout.Button("Load tree"))
-        {
-            asset.LoadTree();
-        }
-
-        GUI.enabled = asset.BehaviourTree != null;
-
-        if (GUILayout.Button("Save Tree"))
-        {
-            asset.SaveTree();
-        }
-
-        GUI.enabled = true;
-        
-        GUILayout.EndHorizontal();
-
-        GUI.enabled = asset.BehaviourTree != null;
-        
-        if (GUILayout.Button("Open Story Window"))
-        {
-            asset.OpenStoryWindow();
-        }
-    }
+    } 
 }

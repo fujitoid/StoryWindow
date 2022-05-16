@@ -1,4 +1,8 @@
+using Nekonata.SituationCreator.StoryWindow.Controllers.TreeAsset.Context;
+using Nekonata.SituationCreator.StoryWindow.Model;
+using Nekonata.SituationCreator.StoryWindow.View.Editor;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using Unity.Plastic.Newtonsoft.Json;
@@ -6,96 +10,111 @@ using UnityEditor;
 using UnityEngine;
 using Application = UnityEngine.Application;
 
-public class BehaviourTreeAsset : ScriptableObject, IBehaviourTreeSaver
+namespace Nekonata.SituationCreator.StoryWindow.Controllers.TreeAsset
 {
-    [SerializeField] private string _directory;
-
-    private BehaviourTree _behaviourTree = null;
-
-    public BehaviourTree BehaviourTree => _behaviourTree;
-
-    public void CreateTree()
+    public class BehaviourTreeAsset : ScriptableObject, IBehaviourTreeSaver
     {
-        var saveDialog = new SaveFileDialog();
-        saveDialog.InitialDirectory = Application.dataPath;
-        saveDialog.Title = "Create new behaviour tree";
-        saveDialog.DefaultExt = "json";
-        saveDialog.Filter = "json files (*.json)|*.json|All files (*.*)|*.*";
+        [SerializeField] private string _directory;
 
-        if (saveDialog.ShowDialog() == DialogResult.OK)
+        private BehaviourTree _behaviourTree = null;
+
+        public BehaviourTree BehaviourTree => _behaviourTree;
+
+        public void CreateTree()
         {
-            var newTree = new BehaviourTree();
-            var json = JsonConvert.SerializeObject(newTree);
-            File.WriteAllText(saveDialog.FileName, json);
-            _directory = saveDialog.FileName;
-            _behaviourTree = newTree;
-
-            AssetDatabase.Refresh();
-        }
-    }
-
-    public void LoadTree()
-    {
-        if (_directory != String.Empty)
-        {
-            BinaryReader binaryReader = new BinaryReader(File.OpenRead(_directory));
-            var json = binaryReader.ReadString();
-            var loadedTree = JsonConvert.DeserializeObject<BehaviourTree>(json);
-
-            if (loadedTree == null)
-                return;
-
-            _behaviourTree = loadedTree;
-            return;
-        }
-
-        var openDialog = new OpenFileDialog();
-        openDialog.InitialDirectory = Application.dataPath;
-        openDialog.Title = "Create new behaviour tree";
-        openDialog.Filter = "json files (*.json)|*.json|All files (*.*)|*.*";
-
-        if (openDialog.ShowDialog() == DialogResult.OK)
-        {
-            BinaryReader binaryReader = new BinaryReader(File.OpenRead(openDialog.FileName));
-            var json = binaryReader.ReadString();
-            var loadedTree = JsonConvert.DeserializeObject<BehaviourTree>(json, new JsonSerializerSettings()
+            if(_directory != string.Empty)
             {
-                TypeNameHandling = TypeNameHandling.Auto,
-                NullValueHandling = NullValueHandling.Ignore
-            });
+                var newTree = new BehaviourTree();
+                var json = JsonConvert.SerializeObject(newTree);
+                File.WriteAllText(_directory, json);
+                return;
+            }
 
-            if (loadedTree == null)
+            var saveDialog = new SaveFileDialog();
+            saveDialog.InitialDirectory = Application.dataPath;
+            saveDialog.Title = "Create new behaviour tree";
+            saveDialog.DefaultExt = "json";
+            saveDialog.Filter = "json files (*.json)|*.json|All files (*.*)|*.*";
+
+            if (saveDialog.ShowDialog() == DialogResult.OK)
+            {
+                var newTree = new BehaviourTree();
+                var json = JsonConvert.SerializeObject(newTree);
+                File.WriteAllText(saveDialog.FileName, json);
+                _directory = saveDialog.FileName;
+                _behaviourTree = newTree;
+
+                AssetDatabase.Refresh();
+            }
+        }
+
+        public void LoadTree()
+        {
+            if (_directory != String.Empty)
+            {
+                BinaryReader binaryReader = new BinaryReader(File.OpenRead(_directory));
+                var json = binaryReader.ReadString();
+                var loadedTree = JsonConvert.DeserializeObject<BehaviourTree>(json, new JsonSerializerSettings()
+                {
+                    TypeNameHandling = TypeNameHandling.Auto,
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+
+                if (loadedTree == null)
+                    return;
+
+                _behaviourTree = loadedTree;
+                return;
+            }
+
+            var openDialog = new OpenFileDialog();
+            openDialog.InitialDirectory = Application.dataPath;
+            openDialog.Title = "Create new behaviour tree";
+            openDialog.Filter = "json files (*.json)|*.json|All files (*.*)|*.*";
+
+            if (openDialog.ShowDialog() == DialogResult.OK)
+            {
+                BinaryReader binaryReader = new BinaryReader(File.OpenRead(openDialog.FileName));
+                var json = binaryReader.ReadString();
+                var loadedTree = JsonConvert.DeserializeObject<BehaviourTree>(json, new JsonSerializerSettings()
+                {
+                    TypeNameHandling = TypeNameHandling.Auto,
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+
+                if (loadedTree == null)
+                    return;
+
+                _behaviourTree = loadedTree;
+                _directory = openDialog.FileName;
+            }
+        }
+
+        public void SaveTree()
+        {
+            if (_behaviourTree == null)
                 return;
 
-            _behaviourTree = loadedTree;
-            _directory = openDialog.FileName;
+            if (_directory == string.Empty)
+                return;
+
+            var json = JsonConvert.SerializeObject(_behaviourTree, Formatting.None, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                TypeNameHandling = TypeNameHandling.Auto
+            });
+            BinaryWriter binaryWriter = new BinaryWriter(File.Create(_directory));
+            binaryWriter.Write(json);
         }
-    }
 
-    public void SaveTree()
-    {
-        if (_behaviourTree == null)
-            return;
-
-        if (_directory == string.Empty)
-            return;
-
-        var json = JsonConvert.SerializeObject(_behaviourTree, Formatting.None, new JsonSerializerSettings()
+        public void OpenStoryWindow()
         {
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            TypeNameHandling = TypeNameHandling.Auto
-        });
-        BinaryWriter binaryWriter = new BinaryWriter(File.Create(_directory));
-        binaryWriter.Write(json);
-    }
+            if (_behaviourTree == null)
+                return;
 
-    public void OpenStoryWindow()
-    {
-        if (_behaviourTree == null)
-            return;
+            BehaviourTreeEditor.OpenWindow(_behaviourTree, this);
+        }
 
-        BehaviourTreeEditor.OpenWindow(_behaviourTree, this);
-    }
-
-    public void Save() => SaveTree();
+        public void Save() => SaveTree();
+    } 
 }

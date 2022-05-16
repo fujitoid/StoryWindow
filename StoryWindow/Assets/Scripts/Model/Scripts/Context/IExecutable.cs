@@ -1,4 +1,7 @@
-public interface IExecutable
+namespace Nekonata.SituationCreator.StoryWindow.Model.Context
 {
-    public void Execute();
+    public interface IExecutable
+    {
+        public void Execute();
+    } 
 }

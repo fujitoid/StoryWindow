@@ -1,11 +1,15 @@
+using Nekonata.SituationCreator.StoryWindow.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BehaviourTreeRunner : MonoBehaviour
+namespace Nekonata.SituationCreator.StoryWindow.Controllers.Runtime
 {
-    [SerializeField] private BehaviourTree _behaviourTree;
-    
-    
+    public class BehaviourTreeRunner : MonoBehaviour
+    {
+        [SerializeField] private BehaviourTree _behaviourTree;
+
+
+    } 
 }

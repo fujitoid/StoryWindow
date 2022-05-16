@@ -1,6 +1,9 @@
-public enum NodeStateType
+namespace Nekonata.SituationCreator.StoryWindow.Model
 {
-    Running = 1,
-    Failure = 2,
-    Success = 3,
+    public enum NodeStateType
+    {
+        Running = 1,
+        Failure = 2,
+        Success = 3,
+    }
 }
