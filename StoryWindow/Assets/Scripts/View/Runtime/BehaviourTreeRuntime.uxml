@@ -1,11 +1,3 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Nekonata.SituationCreator.StoryWindow.View.Runtime.Background>
-        <Nekonata.SituationCreator.StoryWindow.View.Runtime.NodeView style="background-color: rgba(87, 87, 87, 255); top: 72px; left: 96px; height: 48px;">
-            <ui:TextField picking-mode="Ignore" value="Node Name" text="Node Name" />
-            <ui:VisualElement name="Inputs" style="height: 18px; flex-direction: row;">
-                <ui:RadioButton style="width: 145px;" />
-                <ui:RadioButton style="width: 15px;" />
-            </ui:VisualElement>
-        </Nekonata.SituationCreator.StoryWindow.View.Runtime.NodeView>
-    </Nekonata.SituationCreator.StoryWindow.View.Runtime.Background>
+    <Nekonata.SituationCreator.StoryWindow.View.Runtime.BehaviourTreeView />
 </ui:UXML>

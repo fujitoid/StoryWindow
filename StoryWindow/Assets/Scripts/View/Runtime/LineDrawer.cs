@@ -7,21 +7,16 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Runtime
 {
     public class LineDrawer : VisualElement
     {
-        public new class UxmlFactory : UxmlFactory<LineDrawer, VisualElement.UxmlTraits> { }
-
         private Vector3 _startPosition, _endPostion;
         private float _width;
-
-        public LineDrawer()
-        {
-            generateVisualContent += OnGenerateVisualContent;
-        }
 
         public LineDrawer(Vector3 startPosotion, Vector3 endPosition, float width)
         {
             _startPosition = startPosotion;
             _endPostion = endPosition;
             _width = width;
+
+            generateVisualContent += OnGenerateVisualContent;
         }
 
         private void OnGenerateVisualContent(MeshGenerationContext ctx)

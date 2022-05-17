@@ -13,7 +13,7 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Runtime
         public Background()
         {
             this.style.flexGrow = 1;
-            this.style.backgroundColor = new Color(0, 0, 0, 1);
+            this.style.backgroundColor = new Color(0, 0, 0, .8f);
         }
     }
 }

@@ -62,10 +62,10 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Editor
             }
         }
 
-        public override void SetPosition(Rect newPos)
+        public override void SetPosition(Rect newPosition)
         {
-            base.SetPosition(newPos);
-            Vector2 positionToSave = new Vector2(newPos.xMin, newPos.yMin);
+            base.SetPosition(newPosition);
+            Vector2 positionToSave = new Vector2(newPosition.xMin, newPosition.yMin);
             _node.SetPosition(positionToSave);
         }
 

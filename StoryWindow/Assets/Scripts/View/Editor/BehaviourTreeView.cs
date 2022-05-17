@@ -12,8 +12,6 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Editor
     {
         public new class UxmlFactory : UxmlFactory<BehaviourTreeView, GraphView.UxmlTraits> { }
 
-        public Action<NodeView> OnNodeSelected;
-
         private BehaviourTree _tree;
 
         public BehaviourTreeView()
