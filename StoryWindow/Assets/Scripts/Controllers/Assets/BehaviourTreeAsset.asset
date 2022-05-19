@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea5cd9babf1043c45acf28548a2fdb6f, type: 3}
   m_Name: BehaviourTreeAsset
   m_EditorClassIdentifier: 
-  _directory: C:\Users\VladyslavKozunenko\NXRT\StoryWindow\StoryWindow\Assets\Scripts\Trees\TestTree.json
+  _directory: C:\Users\User\StoryWindow\StoryWindow\Assets\Scripts\Trees\SecondTestTree.json

@@ -10,60 +10,15 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Runtime
     {
         private TextField _textField;
 
-        private RadioButton _leftInput;
-        private RadioButton _rightOutput;
-
         private BaseNode _node;
         private Action<BaseNode> _onNodeSelected;
+        private Action _onRedrawTree;
 
         private VisualElement _dradAndDropHolder;
 
         private bool _isMouseHolded = false;
 
         public BaseNode Node => _node;
-
-        public RadioButton Input => _leftInput;
-        public RadioButton Output => _rightOutput;
-
-        public new class UxmlFactory : UxmlFactory<NodeView, NodeView.UxmlTraits> { }
-
-        public NodeView()
-        {
-            this.style.position = Position.Absolute;
-            this.style.width = 135;
-            this.style.height = 75;
-            this.style.backgroundColor = new Color(0.3411765f, 0.3411765f, 0.3411765f, 1);
-
-            _textField = new TextField(string.Empty);
-            _textField.value = "NodeName";
-            _textField.name = "text-field";
-            this.Add(_textField);
-
-            var visualElement = new VisualElement();
-            visualElement.style.flexDirection = FlexDirection.Row;
-            this.Add(visualElement);
-
-            _leftInput = new RadioButton(string.Empty);
-            _leftInput.style.width = 95;
-            _leftInput.name = "left-input";
-            visualElement.Add(_leftInput);
-
-            _rightOutput = new RadioButton(string.Empty);
-            _rightOutput.style.width = 25;
-            _rightOutput.name = "right-output";
-            visualElement.Add(_rightOutput);
-
-            _dradAndDropHolder = new VisualElement();
-            _dradAndDropHolder.style.position = Position.Absolute;
-            _dradAndDropHolder.style.left = 36;
-            _dradAndDropHolder.style.top = 45;
-            _dradAndDropHolder.style.width = 65;
-            _dradAndDropHolder.style.height = 30;
-            _dradAndDropHolder.RegisterCallback<MouseDownEvent>(OnMouseDown);
-            _dradAndDropHolder.RegisterCallback<MouseUpEvent>(OnMouseUp);
-            _dradAndDropHolder.RegisterCallback<MouseMoveEvent>(OnMouseMove);
-            this.Add(_dradAndDropHolder);
-        }
 
         public NodeView(BaseNode baseNode)
         {
@@ -81,15 +36,16 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Runtime
             visualElement.style.flexDirection = FlexDirection.Row;
             this.Add(visualElement);
 
-            _leftInput = new RadioButton(string.Empty);
-            _leftInput.style.width = 95;
-            _leftInput.name = "left-input";
-            visualElement.Add(_leftInput);
-
-            _rightOutput = new RadioButton(string.Empty);
-            _rightOutput.style.width = 25;
-            _rightOutput.name = "right-output";
-            visualElement.Add(_rightOutput);
+            _dradAndDropHolder = new VisualElement();
+            _dradAndDropHolder.style.position = Position.Absolute;
+            _dradAndDropHolder.style.left = 36;
+            _dradAndDropHolder.style.top = 45;
+            _dradAndDropHolder.style.width = 65;
+            _dradAndDropHolder.style.height = 30;
+            _dradAndDropHolder.RegisterCallback<MouseDownEvent>(OnMouseDown);
+            _dradAndDropHolder.RegisterCallback<MouseUpEvent>(OnMouseUp);
+            _dradAndDropHolder.RegisterCallback<MouseMoveEvent>(OnMouseMove);
+            this.Add(_dradAndDropHolder);
 
             this._node = baseNode;
             _textField.value = _node.Name;
@@ -99,38 +55,12 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Runtime
 
             this.style.left = _node.Position.x;
             this.style.top = _node.Position.y;
-
-            CreateInputPorts();
-            CreateOutputPorts();
         }
 
-        internal void SetContext(Action<BaseNode> onNodeSelected)
+        internal void SetContext(Action<BaseNode> onNodeSelected, Action onRedrawTree)
         {
             _onNodeSelected = onNodeSelected;
-        }
-
-        internal void CreateInputPorts()
-        {
-            if (_node is SplitNode)
-            {
-                _leftInput.style.visibility = Visibility.Visible;
-                return;
-            }
-
-            if (_node is BaseNode)
-            {
-                _leftInput.style.visibility = Visibility.Hidden;
-                return;
-            }
-        }
-
-        internal void CreateOutputPorts()
-        {
-            if (_node is BaseNode)
-            {
-                _leftInput.style.visibility = Visibility.Visible;
-                return;
-            }
+            _onRedrawTree = onRedrawTree;
         }
 
         public void SetPostion(Rect newPosition)
@@ -144,6 +74,7 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Runtime
         {
             this.style.top = newPosition.y - this.layout.height / 2;
             this.style.left = newPosition.x - this.layout.width / 2;
+            _node.SetPosition(newPosition);
         }
 
         private void OnMouseDown(MouseDownEvent downEvent)
@@ -164,6 +95,8 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Runtime
             _dradAndDropHolder.style.top = 45;
             _dradAndDropHolder.style.width = 65;
             _dradAndDropHolder.style.height = 30;
+
+            _onRedrawTree.Invoke();
         }
 
         private void OnMouseMove(MouseMoveEvent moveEvent)
@@ -172,6 +105,7 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Runtime
                 return;
 
             SetPostion(moveEvent.mousePosition);
+            _onRedrawTree.Invoke();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Nekonata.SituationCreator.StoryWindow.Controllers.TreeAsset
     {
         [SerializeField] private string _directory;
 
-        private BehaviourTree _behaviourTree = null;
+        private BehaviourTree _behaviourTree;
 
         public BehaviourTree BehaviourTree => _behaviourTree;
 

@@ -16,6 +16,9 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Runtime
             _endPostion = endPosition;
             _width = width;
 
+            this.style.position = Position.Absolute;
+            this.style.flexGrow = 1;
+
             generateVisualContent += OnGenerateVisualContent;
         }
 
@@ -37,7 +40,7 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Runtime
             }
 
             mesh.SetAllVertices(vertices);
-            mesh.SetAllIndices(new ushort[] { 0, 1, 3, 1, 2, 3 });
+            mesh.SetAllIndices(new ushort[] { 0, 3, 1, 1, 3, 2 });
         }
     } 
 }

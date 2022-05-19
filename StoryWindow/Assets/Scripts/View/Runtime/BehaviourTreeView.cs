@@ -16,6 +16,8 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Runtime
         private IBehaviourTreeSaver _treeSaver;
         private Background _background;
 
+        private System.Collections.Generic.List<LineDrawer> _lines = new System.Collections.Generic.List<LineDrawer>();
+
         public BehaviourTreeView()
         {
             if (_tree == null)
@@ -56,20 +58,43 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Runtime
 
             foreach (var node in _tree.Nodes)
             {
+                var chidlren = _tree.GetChildren(node);
+                chidlren.ForEach(x =>
+                {
+                    var parentPos = new Vector3(node.Position.x + 135 / 2, node.Position.y + 75 / 2);
+                    var childrenPos = new Vector3(x.Position.x + 135 / 2, x.Position.y + 75 / 2);
+                    var lineDrawer = new LineDrawer(parentPos, childrenPos, 3);
+                    this.Add(lineDrawer);
+                    _lines.Add(lineDrawer);
+                });
+            }
+
+            foreach (var node in _tree.Nodes)
+            {
                 CreateNodeView(node);
             }
+        }
+
+        private void OnRedrawTree()
+        {
+            foreach(var line in _lines)
+            {
+                Remove(line);
+            }
+
+            _lines.Clear();
 
             foreach (var node in _tree.Nodes)
             {
                 var chidlren = _tree.GetChildren(node);
                 chidlren.ForEach(x =>
-                    {
-                        NodeView parentView = this.Q<NodeView>(node.Guid);
-                        NodeView childrenView = this.Q<NodeView>(x.Guid);
-
-                        var lineDrawer = new LineDrawer(parentView.Output.contentRect.position, childrenView.Input.contentRect.position, 5);
-                        Add(lineDrawer);
-                    });
+                {
+                    var parentPos = new Vector3(node.Position.x + 135 / 2, node.Position.y + 75 / 2);
+                    var childrenPos = new Vector3(x.Position.x + 135 / 2, x.Position.y + 75 / 2);
+                    var lineDrawer = new LineDrawer(parentPos, childrenPos, 3);
+                    this.Add(lineDrawer);
+                    _lines.Add(lineDrawer);
+                });
             }
         }
 
@@ -100,8 +125,8 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Runtime
         private void CreateNodeView(BaseNode node)
         {
             NodeView nodeView = new NodeView(node);
-            nodeView.SetContext(x => _tree.SetCurrentSelectedNode(x));
-            _background.Add(nodeView);
+            nodeView.SetContext(x => _tree.SetCurrentSelectedNode(x), OnRedrawTree);
+            this.Add(nodeView);
         }
     }
 }
