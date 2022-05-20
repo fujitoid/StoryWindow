@@ -3,6 +3,7 @@ using Nekonata.SituationCreator.StoryWindow.Model;
 using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Nekonata.SituationCreator.StoryWindow.View.Editor
 {
@@ -28,6 +29,9 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Editor
 
             style.left = node.Position.x;
             style.top = node.Position.y;
+
+            this.titleContainer.Insert(0, new TextField() { value = node.Name });
+            this.titleContainer.Remove(this.titleContainer.Q<Label>());
 
             CreateInputPorts();
             CreateOutputPorts();
@@ -74,5 +78,5 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Editor
             base.OnSelected();
             _onNodeSelected?.Invoke(_node);
         }
-    } 
+    }
 }

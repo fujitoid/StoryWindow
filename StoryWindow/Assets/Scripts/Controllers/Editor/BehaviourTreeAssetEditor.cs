@@ -41,6 +41,7 @@ namespace Nekonata.SituationCreator.StoryWindow.Controllers.TreeAsset.Editor
 
             if (GUILayout.Button("Open Story Window"))
             {
+                asset.LoadTree();
                 asset.OpenStoryWindow();
             }
         }

@@ -36,6 +36,17 @@ namespace Nekonata.SituationCreator.StoryWindow.View.Runtime
             visualElement.style.flexDirection = FlexDirection.Row;
             this.Add(visualElement);
 
+            var radioButton = new RadioButton();
+            radioButton.style.width = 95;
+            radioButton.RegisterValueChangedCallback<bool>(x => 
+            { 
+                if (radioButton.value) 
+                {
+                    _onNodeSelected.Invoke(_node);
+                } 
+            });
+            visualElement.Add(radioButton);
+
             _dradAndDropHolder = new VisualElement();
             _dradAndDropHolder.style.position = Position.Absolute;
             _dradAndDropHolder.style.left = 36;

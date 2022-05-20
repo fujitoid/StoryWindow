@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Plastic.Newtonsoft.Json;
 using UnityEditor;
-using UnityEngine;
 
 namespace Nekonata.SituationCreator.StoryWindow.Model
 {
@@ -53,7 +53,9 @@ namespace Nekonata.SituationCreator.StoryWindow.Model
 
         internal void RemoveChild(BaseNode parent, BaseNode child)
         {
-            parent.Children.Remove(child);
+            var currentChildren = parent.Children.FirstOrDefault(x => x.GUID == child.GUID);
+
+            parent.Children.Remove(currentChildren);
         }
 
         internal List<BaseNode> GetChildren(BaseNode parent)
